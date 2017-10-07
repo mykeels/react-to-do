@@ -1,14 +1,26 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import EntryComponent from './EntryComponent/EntryComponent.js'
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeTab: "all",
+      list: [{
+        text: "Tell babe I'm sorry",
+        isComplete: false
+      }]
+    }
+  }
+
+  onEntrySubmitHandler(text) {
+    console.log("submitted entry ", text)
+  }
+
   render() {
     return (
       <section className="todoapp">
-          <header className="header">
-            <h1>todos</h1>
-            <input className="new-todo" placeholder="What needs to be done?" autoFocus />
-          </header>
+          <EntryComponent onEntrySubmit={this.onEntrySubmitHandler.bind(this)} />
           <section className="main">
             <input id="toggle-all" className="toggle-all" type="checkbox" />
             <label htmlFor="toggle-all">Mark all as complete</label>
