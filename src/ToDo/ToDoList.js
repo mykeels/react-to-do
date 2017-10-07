@@ -24,7 +24,7 @@ class ToDoList extends Component {
     render() {
         return (
             <ul className="todo-list">
-                {this.state.list.map((item, index) => <ToDoItem data={item} getData={() => this.state.list[index]} index={index} onCompleteChange={this.onChildCompleteChangeHandler.bind(this, index)} />)}
+                {this.state.list.map((item, index) => <ToDoItem data={item} index={index} onCompleteChange={this.onChildCompleteChangeHandler.bind(this, index)} />)}
             </ul>
             );
     }

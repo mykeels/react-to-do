@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import EntryComponent from './EntryComponent/EntryComponent.js'
 import ToggleComponent from './ToggleCompleted/ToggleCompleted.js'
-import ToDoList from './ToDo/ToDoList.js'
+//import ToDoList from './ToDo/ToDoList.js'
 import ToDoItem from './ToDo/ToDoItem.js'
+import FooterComponent from './FooterComponent/FooterComponent.js'
 
 class App extends Component {
   constructor(props) {
@@ -15,6 +16,14 @@ class App extends Component {
       },
       {
         text: "Tell babe I'm sorry",
+        isComplete: true
+      },
+      {
+        text: "Cook babe's dinner",
+        isComplete: false
+      },
+      {
+        text: "Make babe Happy",
         isComplete: false
       }]
     }
@@ -41,6 +50,21 @@ class App extends Component {
     })
   }
 
+  onFooterModifyStateHandler(newState) {
+    console.log(newState)
+    this.setState(state => newState)
+  }
+
+  onToDoItemCompleteChangeHandler(index, isComplete) {
+    this.setState(state => {
+        state.list.forEach((item, i) => {
+            if (i == index) {
+                item.isComplete = isComplete;
+            }
+        })
+        return state;
+    })
+}
 
   render() {
     return (
@@ -48,7 +72,10 @@ class App extends Component {
         <EntryComponent onEntrySubmit={this.onEntrySubmitHandler.bind(this)} />
         <section className="main">
           <ToggleComponent onToggleChange={this.onToggleCompletedChangeHandler.bind(this)} />
-          <ToDoList list={this.state.list} />
+          <ul className="todo-list">
+              {this.state.list.map((item, index) => <ToDoItem data={item} index={index} onCompleteChange={this.onToDoItemCompleteChangeHandler.bind(this, index)} />)}
+          </ul>
+          {/* <ToDoList list={this.state.list} /> */}
           {/* <ul className="todo-list">
               <li className="completed">
                 <div className="view">
@@ -68,21 +95,7 @@ class App extends Component {
               </li>
             </ul> */}
         </section>
-        <footer className="footer">
-          <span className="todo-count"><strong>0</strong> item left</span>
-          <ul className="filters">
-            <li>
-              <a className="selected" href="#/">All</a>
-            </li>
-            <li>
-              <a href="#/active">Active</a>
-            </li>
-            <li>
-              <a href="#/completed">Completed</a>
-            </li>
-          </ul>
-          <button className="clear-completed">Clear completed</button>
-        </footer>
+        <FooterComponent state={this.state} onModifyState={this.onFooterModifyStateHandler.bind(this)} />
       </section>
     );
   }
