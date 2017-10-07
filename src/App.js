@@ -22,6 +22,13 @@ class App extends Component {
 
   onEntrySubmitHandler(text) {
     console.log("submitted entry ", text)
+    this.setState(state => {
+      state.list.push({
+        text: text,
+        isComplete: false
+      })
+      return state;
+    })
   }
 
   onToggleCompletedChangeHandler(showCompleted) {

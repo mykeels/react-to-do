@@ -13,6 +13,10 @@ class EntryComponent extends Component {
     onSubmit(e) {
         e.preventDefault();
         this.props.onEntrySubmit(this.state.text);
+        this.setState(state => {
+            state.text = "";
+            return state;
+        })
     }
 
     onTextChange(e) {
@@ -27,7 +31,7 @@ class EntryComponent extends Component {
             <header className="header">
                 <h1>todos</h1>
                 <form action="" onSubmit={this.onSubmit.bind(this)}>
-                    <input className="new-todo" placeholder="What needs to be done?" onChange={this.onTextChange.bind(this)} required autoFocus />
+                    <input className="new-todo" placeholder="What needs to be done?" value={this.state.text} onChange={this.onTextChange.bind(this)} required autoFocus />
                 </form>
             </header>
                 );
