@@ -13,7 +13,7 @@ class ToDoList extends Component {
     render() {
         return (
             <ul className="todo-list">
-                {this.state.list.map(item => <ToDoItem data={item} />)}
+                {this.state.list.map((item, index) => <ToDoItem data={item} index={index} />)}
             </ul>
             );
     }
