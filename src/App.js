@@ -27,16 +27,10 @@ class App extends Component {
   onToggleCompletedChangeHandler(showCompleted) {
     console.log("show completed ", showCompleted)
     this.setState(state => {
-      const newState = {
-        ...this.state, ...{
-          list: this.state.list.map(item => {
-            item.isComplete = showCompleted;
-            return item;
-          })
-        }
-      }
-      console.log(newState);
-      return newState;
+      state.list.forEach(item => {
+        item.isComplete = showCompleted;
+      });
+      return state;
     })
   }
 

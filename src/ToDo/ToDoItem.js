@@ -7,11 +7,16 @@ class ToDoItem extends Component {
         this.state = props.data
     }
 
+    onCompleteChange(e) {
+        e.persist();
+        this.props.onCompleteChange(e.target.checked)
+    }
+
     render() {
         return (
             <li className={this.state.isComplete ? 'completed' : 'view'}>
                 <div className="view">
-                    <input className="toggle" type="checkbox" checked={this.state.isComplete} />
+                    <input className="toggle" type="checkbox" checked={this.state.isComplete} onChange={this.onCompleteChange.bind(this)} />
                     <label>{this.state.text}</label>
                     <button className="destroy"></button>
                 </div>
@@ -22,7 +27,9 @@ class ToDoItem extends Component {
 }
 
 ToDoItem.propTypes = {
-    data: PropTypes.object.isRequired
+    data: PropTypes.object.isRequired,
+    index: PropTypes.number.isRequired,
+    onCompleteChange: PropTypes.func.isRequired
 }
 
 export default ToDoItem;
