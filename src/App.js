@@ -31,13 +31,14 @@ class App extends Component {
         isComplete: false
       }]
     }
+    this.state.length = this.state.list.length;
   }
 
   onEntrySubmitHandler(text) {
     console.log("submitted entry ", text)
     this.setState(state => {
       state.list.push({
-        key: state.list.length,
+        key: ++state.length,
         text: text,
         isComplete: false
       })
@@ -77,6 +78,14 @@ class App extends Component {
     else return true;
   }
 
+  onToDoItemDestroyHandler(key) {
+    this.setState(state => {
+      const keyIndex = state.list.findIndex(item => item.key == key);
+      state.list.splice(keyIndex, 1);
+      return state;
+    })
+  }
+
   render() {
     return (
       <section className="todoapp">
@@ -85,7 +94,7 @@ class App extends Component {
           <ToggleComponent onToggleChange={this.onToggleCompletedChangeHandler.bind(this)} />
           <ul className="todo-list">
               {this.state.list.filter(this.filterToDoItems.bind(this)).map((item, index) => {
-                    return (<ToDoItem data={item} key={item.key} onCompleteChange={this.onToDoItemCompleteChangeHandler.bind(this, index)} />) 
+                    return (<ToDoItem data={item} key={item.key} onCompleteChange={this.onToDoItemCompleteChangeHandler.bind(this, index)} onDestroy={this.onToDoItemDestroyHandler.bind(this)} />) 
                   })
                   }
           </ul>
