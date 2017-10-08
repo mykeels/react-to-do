@@ -8,10 +8,7 @@ class FooterComponent extends Component {
     }
 
     countItemsLeft() {
-        return this.state.list.filter(item => {
-            if (this.state.activeTab === "completed") return !!item.isComplete;
-            else return !item.isComplete;
-        }).length;
+        return this.state.list.filter(item => !item.isComplete).length;
     }
 
     clearCompletedItems() {
