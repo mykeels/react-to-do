@@ -86,6 +86,14 @@ class App extends Component {
     })
   }
 
+  onToDoEditHandler(key, text) {
+    this.setState(state => {
+      const keyIndex = state.list.findIndex(item => item.key == key);
+      state.list[keyIndex].text = text;
+      return state;
+    })
+  }
+
   render() {
     return (
       <section className="todoapp">
@@ -94,7 +102,10 @@ class App extends Component {
           <ToggleComponent onToggleChange={this.onToggleCompletedChangeHandler.bind(this)} />
           <ul className="todo-list">
               {this.state.list.filter(this.filterToDoItems.bind(this)).map((item, index) => {
-                    return (<ToDoItem data={item} key={item.key} onCompleteChange={this.onToDoItemCompleteChangeHandler.bind(this, index)} onDestroy={this.onToDoItemDestroyHandler.bind(this)} />) 
+                    return (<ToDoItem data={item} key={item.key} 
+                                onCompleteChange={this.onToDoItemCompleteChangeHandler.bind(this, index)} 
+                                onDestroy={this.onToDoItemDestroyHandler.bind(this)} 
+                                onEdit={this.onToDoEditHandler.bind(this)} />) 
                   })
                   }
           </ul>
