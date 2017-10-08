@@ -29,9 +29,9 @@ class App extends Component {
         key: 3,
         text: "Make babe Happy",
         isComplete: false
-      }]
+      }],
+      length: 4
     }
-    this.state.length = this.state.list.length;
   }
 
   onEntrySubmitHandler(text) {
@@ -64,7 +64,7 @@ class App extends Component {
   onToDoItemCompleteChangeHandler(index, isComplete) {
     this.setState(state => {
         state.list.forEach((item, i) => {
-            if (i == index) {
+            if (i === index) {
                 item.isComplete = isComplete;
             }
         })
@@ -80,7 +80,7 @@ class App extends Component {
 
   onToDoItemDestroyHandler(key) {
     this.setState(state => {
-      const keyIndex = state.list.findIndex(item => item.key == key);
+      const keyIndex = state.list.findIndex(item => item.key === key);
       state.list.splice(keyIndex, 1);
       return state;
     })
@@ -88,8 +88,9 @@ class App extends Component {
 
   onToDoEditHandler(key, text) {
     this.setState(state => {
-      const keyIndex = state.list.findIndex(item => item.key == key);
+      const keyIndex = state.list.findIndex(item => item.key === key);
       state.list[keyIndex].text = text;
+      delete state.list[keyIndex].editText;
       return state;
     })
   }

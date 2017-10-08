@@ -19,21 +19,17 @@ class ToDoItem extends Component {
     onEditText(e) {
         e.persist();
         console.log(e.target.value);
-        this.setState(state => {
-            state.text = e.target.value;
-            return state;
-        })
+        this.props.onEdit(this.state.key, e.target.value)
     }
 
     onSubmitEditText(e) {
         e.preventDefault();
-        this.props.onEdit(this.state.key, this.state.text)
-        this.switchView();
+        this.switchView(false);
     }
 
-    switchView() {
+    switchView(editText) {
         this.setState(state => {
-            state.editText = !state.editText;
+            state.editText = editText;
             return state;
         })
     }
@@ -45,13 +41,13 @@ class ToDoItem extends Component {
                     (
                         <div className="view">
                             <input className="toggle" type="checkbox" checked={this.state.isComplete} onChange={this.onCompleteChange.bind(this)} />
-                            <label onDoubleClick={this.switchView.bind(this)}>{this.state.text}</label>
+                            <label onDoubleClick={this.switchView.bind(this, true)}>{this.props.data.text}</label>
                             <button className="destroy" onClick={this.onDestroy.bind(this)}></button>
                         </div>
                     ) :
                     (
                         <form onSubmit={this.onSubmitEditText.bind(this)}>
-                            <input className="edit" value={this.state.text} onChange={this.onEditText.bind(this)} required />
+                            <input className="edit" value={this.props.data.text} onChange={this.onEditText.bind(this)} required />
                         </form>
                     )
                 }
