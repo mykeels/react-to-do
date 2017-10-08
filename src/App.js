@@ -90,7 +90,7 @@ class App extends Component {
                   }
           </ul>
         </section>
-        <FooterComponent state={this.state} onModifyState={this.onFooterModifyStateHandler.bind(this)} filterToDoItems={this.filterToDoItems} />
+        <FooterComponent state={this.state} onModifyState={this.onFooterModifyStateHandler.bind(this)} />
       </section>
     );
   }
