@@ -28,7 +28,6 @@ class ToDoItem extends Component {
 
 ToDoItem.propTypes = {
     data: PropTypes.object.isRequired,
-    index: PropTypes.number.isRequired,
     onCompleteChange: PropTypes.func.isRequired
 }
 

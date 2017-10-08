@@ -11,18 +11,22 @@ class App extends Component {
     this.state = {
       activeTab: "all",
       list: [{
+        key: 0,
         text: "Buy gifts for babe",
         isComplete: true
       },
       {
+        key: 1,
         text: "Tell babe I'm sorry",
         isComplete: true
       },
       {
+        key: 2,
         text: "Cook babe's dinner",
         isComplete: false
       },
       {
+        key: 3,
         text: "Make babe Happy",
         isComplete: false
       }]
@@ -33,6 +37,7 @@ class App extends Component {
     console.log("submitted entry ", text)
     this.setState(state => {
       state.list.push({
+        key: state.list.length,
         text: text,
         isComplete: false
       })
@@ -64,7 +69,13 @@ class App extends Component {
         })
         return state;
     })
-}
+  }
+
+  filterToDoItems(item) {
+    if (this.state.activeTab === "active") return !item.isComplete;
+    else if (this.state.activeTab === "completed") return !!item.isComplete;
+    else return true;
+  }
 
   render() {
     return (
@@ -73,29 +84,13 @@ class App extends Component {
         <section className="main">
           <ToggleComponent onToggleChange={this.onToggleCompletedChangeHandler.bind(this)} />
           <ul className="todo-list">
-              {this.state.list.map((item, index) => <ToDoItem data={item} index={index} onCompleteChange={this.onToDoItemCompleteChangeHandler.bind(this, index)} />)}
+              {this.state.list.filter(this.filterToDoItems.bind(this)).map((item, index) => {
+                    return (<ToDoItem data={item} key={item.key} onCompleteChange={this.onToDoItemCompleteChangeHandler.bind(this, index)} />) 
+                  })
+                  }
           </ul>
-          {/* <ToDoList list={this.state.list} /> */}
-          {/* <ul className="todo-list">
-              <li className="completed">
-                <div className="view">
-                  <input className="toggle" type="checkbox" />
-                  <label>Taste JavaScript</label>
-                  <button className="destroy"></button>
-                </div>
-                <input className="edit" defaultValue="Create a TodoMVC template" />
-              </li>
-              <li>
-                <div className="view">
-                  <input className="toggle" type="checkbox" />
-                  <label>Buy a unicorn</label>
-                  <button className="destroy"></button>
-                </div>
-                <input className="edit" defaultValue="Rule the web" />
-              </li>
-            </ul> */}
         </section>
-        <FooterComponent state={this.state} onModifyState={this.onFooterModifyStateHandler.bind(this)} />
+        <FooterComponent state={this.state} onModifyState={this.onFooterModifyStateHandler.bind(this)} filterToDoItems={this.filterToDoItems} />
       </section>
     );
   }
