@@ -69,11 +69,6 @@ class App extends Component {
     }))
   }
 
-  onFooterModifyStateHandler(newState) {
-    console.log(newState)
-    this.setState(state => newState)
-  }
-
   onToDoItemCompleteChangeHandler = (key, isComplete) => {
     this.setState(state => ({
       ...state, ...{
