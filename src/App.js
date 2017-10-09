@@ -34,36 +34,39 @@ class App extends Component {
       length: 4
     }
   }
-  
+
   onEntrySubmitHandler = (e) => {
     e.preventDefault();
     console.log("submitted entry ", this.state.newEntry)
-    this.setState(state => ({ 
-        newEntry: "",
-        length: state.length + 1,
-        list: [...state.list, {
-          key: state.length + 1,
-          text: state.newEntry,
-          isComplete: false
-        }]
-     }))
+    this.setState(state => ({
+      newEntry: "",
+      length: state.length + 1,
+      list: [...state.list, {
+        key: state.length + 1,
+        text: state.newEntry,
+        isComplete: false
+      }]
+    }))
   }
-  
+
   onEntryComponentTextChangeHandler = (e) => {
     const text = e.target.value;
     this.setState({ newEntry: text });
   }
 
-  onToggleCompletedChangeHandler(e) {
+  onToggleCompletedChangeHandler = (e) => {
     e.persist();
     const showCompleted = e.target.checked;
     console.log("show completed ", showCompleted)
-    this.setState(state => {
-      state.list.forEach(item => {
-        item.isComplete = showCompleted;
-      });
-      return state;
-    })
+    this.setState(state => ({
+      ...state,
+      ...{
+        list: state.list.map(item => {
+          item.isComplete = showCompleted;
+          return item;
+        })
+      }
+    }))
   }
 
   onFooterModifyStateHandler(newState) {
@@ -72,42 +75,44 @@ class App extends Component {
   }
 
   onToDoItemCompleteChangeHandler = (key, isComplete) => {
-    this.setState(state => ({ ...state, ...{
-      list: state.list.map(item => {
-        if (item.key === key) item.isComplete = isComplete;
-        return item;
-      })
-    } }))
-  }
-
-  filterToDoItems(item) {
-    if (this.state.activeTab === "active") return !item.isComplete;
-    else if (this.state.activeTab === "completed") return !!item.isComplete;
-    else return true;
+    this.setState(state => ({
+      ...state, ...{
+        list: state.list.map(item => {
+          if (item.key === key) item.isComplete = isComplete;
+          return item;
+        })
+      }
+    }))
   }
 
   onToDoItemDestroyHandler = (key) => {
-    this.setState(state => ({ ...state, ...{
-      list: state.list.filter((item) => item.key !== key)
-    } }))
+    this.setState(state => ({
+      ...state, ...{
+        list: state.list.filter((item) => item.key !== key)
+      }
+    }))
   }
 
   onToDoEditHandler = (key, text) => {
-    this.setState(state => ({ ...state, ...{
-      list: state.list.map((item) => {
-        if (item.key === key) item.text = text;
-        return item;
-      })
-    } }))
+    this.setState(state => ({
+      ...state, ...{
+        list: state.list.map((item) => {
+          if (item.key === key) item.text = text;
+          return item;
+        })
+      }
+    }))
   }
 
   onToDoItemSwitchViewHandler = (key) => {
-    this.setState(state => ({ ...state, ...{
-      list: state.list.map(item => {
-        if (item.key === key) item.editText = !item.editText;
-        return item;
-      })
-    } }))
+    this.setState(state => ({
+      ...state, ...{
+        list: state.list.map(item => {
+          if (item.key === key) item.editText = !item.editText;
+          return item;
+        })
+      }
+    }))
   }
 
   onFooterSelectTabHandler = (e) => {
@@ -120,27 +125,32 @@ class App extends Component {
 
   filterListItemIsComplete = (item) => !!item.isComplete;
   filterListItemIsNotComplete = (item) => !item.isComplete;
+  filterToDoItems = (item) => {
+    if (this.state.activeTab === "active") return !item.isComplete;
+    else if (this.state.activeTab === "completed") return !!item.isComplete;
+    else return true;
+  }
 
   render() {
     return (
       <section className="todoapp">
         <EntryComponent text={this.state.newEntry} onTextChange={this.onEntryComponentTextChangeHandler} onEntrySubmit={this.onEntrySubmitHandler} />
         <section className="main">
-          <ToggleComponent value={this.state.list.every(this.filterListItemIsComplete)} onToggleChange={this.onToggleCompletedChangeHandler.bind(this)} />
+          <ToggleComponent value={this.state.list.every(this.filterListItemIsComplete)} onToggleChange={this.onToggleCompletedChangeHandler} />
           <ul className="todo-list">
-              {this.state.list.filter(this.filterToDoItems.bind(this)).map((item, index) => {
-                    return (<ToDoItem data={item} key={item.key}
-                                onCompleteChange={this.onToDoItemCompleteChangeHandler} 
-                                onDestroy={this.onToDoItemDestroyHandler} 
-                                onSwitchView={this.onToDoItemSwitchViewHandler}
-                                onEdit={this.onToDoEditHandler} />) 
-                  })
-                  }
+            {this.state.list.filter(this.filterToDoItems).map((item, index) => {
+              return (<ToDoItem data={item} key={item.key}
+                onCompleteChange={this.onToDoItemCompleteChangeHandler}
+                onDestroy={this.onToDoItemDestroyHandler}
+                onSwitchView={this.onToDoItemSwitchViewHandler}
+                onEdit={this.onToDoEditHandler} />)
+            })
+            }
           </ul>
         </section>
-        <FooterComponent itemsLeftCount={this.state.list.filter(this.filterListItemIsNotComplete).length} 
-                      activeTab={this.state.activeTab} onSelectTab={this.onFooterSelectTabHandler}
-                      onClearCompletedItems={this.onClearCompletedItemsHandler} />
+        <FooterComponent itemsLeftCount={this.state.list.filter(this.filterListItemIsNotComplete).length}
+          activeTab={this.state.activeTab} onSelectTab={this.onFooterSelectTabHandler}
+          onClearCompletedItems={this.onClearCompletedItemsHandler} />
       </section>
     );
   }
