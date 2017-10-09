@@ -2,52 +2,44 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class ToDoItem extends Component {
-    constructor(props) {
-        super(props);
-        this.state = props.data
-    }
-
-    onCompleteChange(e) {
+    onCompleteChange = (e) => {
         e.persist();
-        this.props.onCompleteChange(e.target.checked)
+        this.props.onCompleteChange(this.props.data.key, e.target.checked)
     }
 
-    onDestroy() {
+    onDestroy = () => {
         this.props.onDestroy(this.state.key)
     }
 
-    onEditText(e) {
+    onEditText = (e) => {
         e.persist();
         console.log(e.target.value);
-        this.props.onEdit(this.state.key, e.target.value)
+        this.props.onEdit(this.props.data.key, e.target.value)
     }
 
-    onSubmitEditText(e) {
+    onSubmitEditText = (e) => {
         e.preventDefault();
-        this.switchView(false);
+        this.props.onSwitchView(this.props.data.key);
     }
 
-    switchView(editText) {
-        this.setState(state => {
-            state.editText = editText;
-            return state;
-        })
+    switchView = () => {
+        this.props.onSwitchView(this.props.data.key)
     }
 
     render() {
         return (
-            <li className={this.state.isComplete ? 'completed' : 'view'}>
-                {!this.state.editText ? 
+            <li className={this.props.data.isComplete ? 'completed' : 'view'}>
+                {!this.props.data.editText ? 
                     (
                         <div className="view">
-                            <input className="toggle" type="checkbox" checked={this.state.isComplete} onChange={this.onCompleteChange.bind(this)} />
-                            <label onDoubleClick={this.switchView.bind(this, true)}>{this.props.data.text}</label>
-                            <button className="destroy" onClick={this.onDestroy.bind(this)}></button>
+                            <input className="toggle" type="checkbox" checked={this.props.data.isComplete} onChange={this.onCompleteChange} />
+                            <label onDoubleClick={this.switchView}>{this.props.data.text}</label>
+                            <button className="destroy" onClick={this.onDestroy}></button>
                         </div>
                     ) :
                     (
-                        <form onSubmit={this.onSubmitEditText.bind(this)}>
-                            <input className="edit" value={this.props.data.text} onChange={this.onEditText.bind(this)} required />
+                        <form onSubmit={this.onSubmitEditText}>
+                            <input className="edit" value={this.props.data.text} onChange={this.onEditText} required />
                         </form>
                     )
                 }
@@ -60,7 +52,8 @@ ToDoItem.propTypes = {
     data: PropTypes.object.isRequired,
     onCompleteChange: PropTypes.func.isRequired,
     onDestroy: PropTypes.func.isRequired,
-    onEdit: PropTypes.func.isRequired
+    onEdit: PropTypes.func.isRequired,
+    onSwitchView: PropTypes.func
 }
 
 export default ToDoItem;

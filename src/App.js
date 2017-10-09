@@ -71,15 +71,13 @@ class App extends Component {
     this.setState(state => newState)
   }
 
-  onToDoItemCompleteChangeHandler(index, isComplete) {
-    this.setState(state => {
-        state.list.forEach((item, i) => {
-            if (i === index) {
-                item.isComplete = isComplete;
-            }
-        })
-        return state;
-    })
+  onToDoItemCompleteChangeHandler = (key, isComplete) => {
+    this.setState(state => ({ ...state, ...{
+      list: state.list.map(item => {
+        if (item.key === key) item.isComplete = isComplete;
+        return item;
+      })
+    } }))
   }
 
   filterToDoItems(item) {
@@ -88,21 +86,28 @@ class App extends Component {
     else return true;
   }
 
-  onToDoItemDestroyHandler(key) {
-    this.setState(state => {
-      const keyIndex = state.list.findIndex(item => item.key === key);
-      state.list.splice(keyIndex, 1);
-      return state;
-    })
+  onToDoItemDestroyHandler = (key) => {
+    this.setState(state => ({ ...state, ...{
+      list: state.list.filter((item) => item.key !== key)
+    } }))
   }
 
-  onToDoEditHandler(key, text) {
-    this.setState(state => {
-      const keyIndex = state.list.findIndex(item => item.key === key);
-      state.list[keyIndex].text = text;
-      delete state.list[keyIndex].editText;
-      return state;
-    })
+  onToDoEditHandler = (key, text) => {
+    this.setState(state => ({ ...state, ...{
+      list: state.list.map((item) => {
+        if (item.key === key) item.text = text;
+        return item;
+      })
+    } }))
+  }
+
+  onToDoItemSwitchViewHandler = (key) => {
+    this.setState(state => ({ ...state, ...{
+      list: state.list.map(item => {
+        if (item.key === key) item.editText = !item.editText;
+        return item;
+      })
+    } }))
   }
 
   onFooterSelectTabHandler = (e) => {
@@ -124,10 +129,11 @@ class App extends Component {
           <ToggleComponent value={this.state.list.every(this.filterListItemIsComplete)} onToggleChange={this.onToggleCompletedChangeHandler.bind(this)} />
           <ul className="todo-list">
               {this.state.list.filter(this.filterToDoItems.bind(this)).map((item, index) => {
-                    return (<ToDoItem data={item} key={item.key} 
-                                onCompleteChange={this.onToDoItemCompleteChangeHandler.bind(this, index)} 
-                                onDestroy={this.onToDoItemDestroyHandler.bind(this)} 
-                                onEdit={this.onToDoEditHandler.bind(this)} />) 
+                    return (<ToDoItem data={item} key={item.key}
+                                onCompleteChange={this.onToDoItemCompleteChangeHandler} 
+                                onDestroy={this.onToDoItemDestroyHandler} 
+                                onSwitchView={this.onToDoItemSwitchViewHandler}
+                                onEdit={this.onToDoEditHandler} />) 
                   })
                   }
           </ul>
