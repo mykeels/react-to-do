@@ -97,7 +97,16 @@ class App extends Component {
     })
   }
 
+  onFooterSelectTabHandler = (e) => {
+    this.setState({ activeTab: e.target.getAttribute("data-value") })
+  }
+
+  onClearCompletedItemsHandler = () => {
+    this.setState(state => ({ ...state, ...{ list: state.list.filter(item => !item.isComplete) } }))
+  }
+
   filterListItemIsComplete = (item) => !!item.isComplete;
+  filterListItemIsNotComplete = (item) => !item.isComplete;
 
   render() {
     return (
@@ -115,7 +124,9 @@ class App extends Component {
                   }
           </ul>
         </section>
-        <FooterComponent state={this.state} onModifyState={this.onFooterModifyStateHandler.bind(this)} />
+        <FooterComponent itemsLeftCount={this.state.list.filter(this.filterListItemIsNotComplete).length} 
+                      activeTab={this.state.activeTab} onSelectTab={this.onFooterSelectTabHandler}
+                      onClearCompletedItems={this.onClearCompletedItemsHandler} />
       </section>
     );
   }
