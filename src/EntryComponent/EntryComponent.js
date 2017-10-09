@@ -2,36 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class EntryComponent extends Component {
-    constructor(props) {
-        super(props);
-        console.log(props);
-        this.state = {
-            text: props.text
-        }
-    }
-
-    onSubmit(e) {
-        e.preventDefault();
-        this.props.onEntrySubmit(this.state.text);
-        this.setState(state => {
-            state.text = "";
-            return state;
-        })
-    }
-
-    onTextChange(e) {
-        e.persist();
-        this.setState(state => ({
-            text: e.target.value
-        }))
-    }
-
     render() {
         return (
             <header className="header">
                 <h1>todos</h1>
-                <form action="" onSubmit={this.onSubmit.bind(this)}>
-                    <input className="new-todo" placeholder="What needs to be done?" value={this.state.text} onChange={this.onTextChange.bind(this)} required autoFocus />
+                <form action="" onSubmit={this.props.onEntrySubmit}>
+                    <input className="new-todo" placeholder="What needs to be done?" value={this.props.text} 
+                            onChange={this.props.onTextChange} required autoFocus />
                 </form>
             </header>
                 );
@@ -39,8 +16,9 @@ class EntryComponent extends Component {
 }
 
 EntryComponent.propTypes = {
-    text: PropTypes.string,
-    onEntrySubmit: PropTypes.func.isRequired
+    text: PropTypes.string.isRequired,
+    onEntrySubmit: PropTypes.func.isRequired,
+    onTextChange: PropTypes.func.isRequired
 }
 
 EntryComponent.defaultProps = {

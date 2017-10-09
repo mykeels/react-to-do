@@ -9,6 +9,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      newEntry: "",
       activeTab: "all",
       list: [{
         key: 0,
@@ -33,17 +34,24 @@ class App extends Component {
       length: 4
     }
   }
-
-  onEntrySubmitHandler(text) {
-    console.log("submitted entry ", text)
-    this.setState(state => {
-      state.list.push({
-        key: ++state.length,
-        text: text,
-        isComplete: false
-      })
-      return state;
-    })
+  
+  onEntrySubmitHandler = (e) => {
+    e.preventDefault();
+    console.log("submitted entry ", this.state.newEntry)
+    this.setState(state => ({ 
+        newEntry: "",
+        length: state.length + 1,
+        list: [...state.list, {
+          key: state.length + 1,
+          text: state.newEntry,
+          isComplete: false
+        }]
+     }))
+  }
+  
+  onEntryComponentTextChangeHandler = (e) => {
+    const text = e.target.value;
+    this.setState({ newEntry: text });
   }
 
   onToggleCompletedChangeHandler(e) {
@@ -111,7 +119,7 @@ class App extends Component {
   render() {
     return (
       <section className="todoapp">
-        <EntryComponent onEntrySubmit={this.onEntrySubmitHandler.bind(this)} />
+        <EntryComponent text={this.state.newEntry} onTextChange={this.onEntryComponentTextChangeHandler} onEntrySubmit={this.onEntrySubmitHandler} />
         <section className="main">
           <ToggleComponent value={this.state.list.every(this.filterListItemIsComplete)} onToggleChange={this.onToggleCompletedChangeHandler.bind(this)} />
           <ul className="todo-list">
