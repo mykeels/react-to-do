@@ -46,7 +46,9 @@ class App extends Component {
     })
   }
 
-  onToggleCompletedChangeHandler(showCompleted) {
+  onToggleCompletedChangeHandler(e) {
+    e.persist();
+    const showCompleted = e.target.checked;
     console.log("show completed ", showCompleted)
     this.setState(state => {
       state.list.forEach(item => {
@@ -95,12 +97,14 @@ class App extends Component {
     })
   }
 
+  filterListItemIsComplete = (item) => !!item.isComplete;
+
   render() {
     return (
       <section className="todoapp">
         <EntryComponent onEntrySubmit={this.onEntrySubmitHandler.bind(this)} />
         <section className="main">
-          <ToggleComponent onToggleChange={this.onToggleCompletedChangeHandler.bind(this)} />
+          <ToggleComponent value={this.state.list.every(this.filterListItemIsComplete)} onToggleChange={this.onToggleCompletedChangeHandler.bind(this)} />
           <ul className="todo-list">
               {this.state.list.filter(this.filterToDoItems.bind(this)).map((item, index) => {
                     return (<ToDoItem data={item} key={item.key} 
