@@ -8,7 +8,7 @@ class ToDoItem extends Component {
     }
 
     onDestroy = () => {
-        this.props.onDestroy(this.state.key)
+        this.props.onDestroy(this.props.data.key)
     }
 
     onEditText = (e) => {
